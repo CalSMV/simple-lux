@@ -1,0 +1,26 @@
+.screen {
+	position: absolute;
+	background: #000000;
+	font: #FFFFFF;
+	z-index: 100;
+	overflow: hidden;
+	height: 480px;
+	width: 800px;
+	/*temporary border below*/
+	border: 1px solid red;
+}
+
+#homescreen {
+	top: 0px;
+	left: 0px;
+}
+
+#musicscreen {
+	top: 0px;
+	left: 800px;
+}
+
+#camerascreen {
+	top: 0px;
+	left: 1600px;
+}
