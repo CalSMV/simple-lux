@@ -14,15 +14,17 @@ QUERY_DELAY = 0.5
 
 clients = []
 
-class Main():
-	def __init__(self, port=1234, verbose=True):
+class Console():
+	def __init__(self, telemetry, getTelemFunc, port=1234, verbose=True):
 		self.port = port
 		self.verbose = verbose
 		self.initialized = False
+		self.telemNames = telemetry
+		self.telemData = {}
+		self.getTelem = getTelemFunc
+		if (self.verbose): print("main :: init")
 
-		if self.verbose: print("main :: init")
-
-	def start_server(self):
+	def startServer(self):
 		'''
 		starts the tornado webserver
 		'''
@@ -32,10 +34,32 @@ class Main():
 		except KeyboardInterrupt:
 			print("main :: server stopped")
 
-	def update(self):
-		print("this is the function that the DataPusher calls to regularly push data to the client")
+	def initConfig(self):
+		'''
+		initial configuration for when the websocket is first opened
+		'''
+		if (self.verbose): print("main :: config")
+		# begin default configuration
+		toSend = { "spawnHomeScreen": [], "spawnMusicScreen": [], "spawnCameraScreen": [] }
+		self.sendToClients(toSend)
 
-	def send_to_clients(self, data):
+	def update(self):
+		'''
+		function that regularly pushes data client
+		'''
+		if ((not self.initialized) and (not len(clients) == 0)):
+			self.initConfig()
+			self.initialized = True
+		toSend = self.getTelemetryFromSlaves()
+		self.sendToClients(toSend)
+
+	def getTelemetryFromSlaves(self):
+		for telemName in self.telemNames:
+			self.telemData[telemName] = self.getTelem(telemName)
+		data = { "drawTelemetry": [self.telemData] }
+		return data
+
+	def sendToClients(self, data):
 		'''
 		packages data as json objects and sends to client via websockets
 		'''
@@ -57,42 +81,43 @@ class SocketHandler(websocket.WebSocketHandler):
 		opens the websockets connection between server and client
 		adds client to list of clients
 		'''
-		print("main :: WebSocket opened") # TODO: how to pass main.verbose to this?
+		print("main :: WebSocket opened") # TODO: how to pass console.verbose to this?
 		if (self not in clients):
 			print("main :: client added")
 			clients.append(self)
+
 	def on_close(self):
 		'''
 		handles the closing of the websocket
 		removes client from list
 		sets init to false
 		'''
-		print("main :: WebSocket closed") # TODO: how to pass main.verbose to this?
+		print("main :: WebSocket closed") # TODO: how to pass console.verbose to this?
 		if (self in clients):
 			print("main :: client removed")
 			clients.remove(self)
-		self.application.data_pusher.main.initialized = False
+		self.application.dataPusher.console.initialized = False
 
 	def on_message(self):
 		'''
 		handles inputs from the client
 		'''
-		print("main :: server received message") # TODO: how to pass main.verbose to this?
+		print("main :: server received message") # TODO: how to pass console.verbose to this?
 		try:
 			msg = json.loads(message)
 		except Exception as e:
-			print("main :: exception in 'on_message'")
+			print("main :: exception in 'onMessage'")
 
 class DataPusher():
-	def __init__(self, main):
+	def __init__(self, console):
 		'''
 		class responsible for regularly pushing data to the client
 		'''
-		self.main = main
-		self.secs_per_reading = 0.0001
+		self.console = console
+		self.secsPerReading = 0.0001
 		self.running = False
 		self.thread = None
-		if self.main.verbose: print("main :: init datapusher")
+		if (self.console.verbose): print("main :: init datapusher")
 		self.start()
 
 	def start(self):
@@ -109,35 +134,35 @@ class DataPusher():
 		'''
 		function that constantly pushes data to clients
 		'''
-		if self.main.verbose: print("main :: starting pushes")
-		last_query = time.time()
+		if (self.console.verbose): print("main :: starting pushes")
+		lastQuery = time.time()
 		while (self.running):
 			try:
-				elapsed = time.time() - last_query
-				if (elapsed > self.secs_per_reading):
+				elapsed = time.time() - lastQuery
+				if (elapsed > self.secsPerReading):
 					if (len(clients) > 0):
-						if self.main.verbose: print("main :: push")
-						self.main.update()
-					last_query = time.time()
+						# if (self.console.verbose): print("main :: push")
+						self.console.update()
+					lastQuery = time.time()
 				else:
-					time.sleep(0.0001)
+					time.sleep(0.001)
 			except Exception as e:
 				print("main :: error during data push")
 				print(e)
 
 class Server():
-	def __init__(self, main):
+	def __init__(self, console):
 		'''
 		tornado webserver
 		'''
-		if main.verbose: print("main :: start http & websocket server on", main.port)
-		self.web_app = web.Application([
+		if (console.verbose): print("main :: start http & websocket server on", console.port)
+		self.webApp = web.Application([
 			(r'/', IndexHandler),
 			(r'/ws', SocketHandler),
 			(r'/(.*)', web.StaticFileHandler, {'path': '../www/'}),
 			],)
-		self.web_app.listen(main.port)
-		data_pusher = DataPusher(main)
-		self.web_app.data_pusher = data_pusher
+		self.webApp.listen(console.port)
+		dataPusher = DataPusher(console)
+		self.webApp.dataPusher = dataPusher
 
 		
