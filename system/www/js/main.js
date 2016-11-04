@@ -3,9 +3,9 @@ var verbose = true;
 var main = function() {
 	// this function is for use in --> $(document).ready(main)
 	// TODO: remove all these calls for all the spawn functions, they only exist right now for dev purposes
-	spawnHomeScreen();
-	spawnMusicScreen();
-	spawnCameraScreen();
+	// spawnHomeScreen();
+	// spawnMusicScreen();
+	// spawnCameraScreen();
 };
 
 var spawnHomeScreen = function() {
