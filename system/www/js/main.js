@@ -1,3 +1,5 @@
+var verbose = true;
+
 var main = function() {
 	// this function is for use in --> $(document).ready(main)
 	// TODO: remove all these calls for all the spawn functions, they only exist right now for dev purposes
@@ -39,6 +41,14 @@ var spawnCameraScreen = function() {
 	body.appendChild(camerascreen);
 };
 
+var drawTelemetry = function(data) {
+	/*
+	Update the center console based on new data
+	*/
+	console.log("received telemetry");
+	console.log(data);
+};
+
 var spawnNavbar = function(tabArray) {
 	/*
 	Create a navbar with N items
@@ -48,7 +58,7 @@ var spawnNavbar = function(tabArray) {
 /*================================================
 	Websocket IO Framework
 ================================================*/
-var ws = new WebSocket('ws://localhost:1234/ws');
+var ws = new WebSocket("ws://localhost:1234/ws");
 
 ws.onopen = function() {
 	/*
@@ -79,7 +89,25 @@ ws.onmessage = function(ev) {
 	var jsonraw = JSON.parse(ev.data);
 
 	for (var key in jsonraw) {
-
+		value = jsonraw[key];
+		switch(key) {
+			case "spawnHomeScreen":
+				if (verbose) { console.log("spawnHomeScreen"); }
+				spawnHomeScreen();
+				break;
+			case "spawnMusicScreen":
+				if (verbose) { console.log("spawnMusicScreen"); }
+				spawnMusicScreen();
+				break;
+			case "spawnCameraScreen":
+				if (verbose) { console.log("spawnCameraScreen"); }
+				spawnCameraScreen();
+				break;
+			case "drawTelemetry":
+				if (verbose) { console.log("drawTelemetry"); }
+				drawTelemetry(value[0]);
+				break;
+		}
 	}
 };
 
@@ -93,4 +121,4 @@ sendmsg = function(key, value) {
 };
 
 
-$(document).ready(main);
+// $(document).ready(main);
