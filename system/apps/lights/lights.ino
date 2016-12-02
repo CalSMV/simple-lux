@@ -5,8 +5,8 @@
  */
 
 // define pins
-#define HEAD_TAIL_LIGHTS 5  // corresponds to PIN D2
-#define TURN_LIGHTS 11      // corresponds to PIN D8
+#define HEAD_TAIL_LIGHTS 2  // corresponds to PIN D2
+#define TURN_LIGHTS 8      // corresponds to PIN D8
 #define LED_PIN 13          // onboard LED
 
 // define mode
