@@ -1,7 +1,7 @@
 .screen {
 	position: absolute;
-	background: #000000;
-	font: #FFFFFF;
+	background: #FFFFFF;
+	font: #000000;
 	z-index: 100;
 	overflow: hidden;
 	height: 480px;
@@ -13,6 +13,7 @@
 
 span {
 	color: aqua;
+
 }
 
 #homescreen {
