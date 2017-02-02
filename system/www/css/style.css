@@ -1,4 +1,4 @@
-/*.screen {
+.screen {
 	position: absolute;
 	background: #FFFFFF;
 	font: #000000;
@@ -7,9 +7,15 @@
 	height: 480px;
 	width: 800px;
 	/*temporary border below*/
-	/*border: 1px solid red;
+	border: 1px solid red;
+	scroll-snap-type: mandatory;
 }
-*/
+
+span {
+	color: aqua;
+
+}
+
 #homescreen {
 	top: 0px;
 	left: 0px;
