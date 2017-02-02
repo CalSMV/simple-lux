@@ -1,15 +1,15 @@
-.screen {
+/*.screen {
 	position: absolute;
-	background: #000000;
-	font: #FFFFFF;
+	background: #FFFFFF;
+	font: #000000;
 	z-index: 100;
 	overflow: hidden;
 	height: 480px;
 	width: 800px;
 	/*temporary border below*/
-	border: 1px solid red;
+	/*border: 1px solid red;
 }
-
+*/
 #homescreen {
 	top: 0px;
 	left: 0px;
