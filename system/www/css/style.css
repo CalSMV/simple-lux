@@ -8,6 +8,11 @@
 	width: 800px;
 	/*temporary border below*/
 	border: 1px solid red;
+	scroll-snap-type: mandatory;
+}
+
+span {
+	color: aqua;
 }
 
 #homescreen {
