@@ -1,7 +1,7 @@
 /* lights.ino
  * Control the lights on simple Lux
  * 
- * Andrew Chan
+ * Author: Andrew Chan
  */
 
 // define pins
