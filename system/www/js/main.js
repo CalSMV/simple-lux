@@ -4,9 +4,9 @@ var screens = [];
 var main = function() {
 	// this function is for use in --> $(document).ready(main)
 	// TODO: remove all these calls for all the spawn functions, they only exist right now for dev purposes
-	spawnHomeScreen();
-	spawnMusicScreen();
-	spawnCameraScreen();
+	// spawnHomeScreen();
+	// spawnMusicScreen();
+	// spawnCameraScreen();
 };
 
 var spawnHomeScreen = function() {
@@ -104,18 +104,18 @@ ws.onmessage = function(ev) {
 	for (var key in jsonraw) {
 		value = jsonraw[key];
 		switch(key) {
-			// case "spawnHomeScreen":
-			// 	if (verbose) { console.log("spawnHomeScreen"); }
-			// 	spawnHomeScreen();
-			// 	break;
-			// case "spawnMusicScreen":
-			// 	if (verbose) { console.log("spawnMusicScreen"); }
-			// 	spawnMusicScreen();
-			// 	break;
-			// case "spawnCameraScreen":
-			// 	if (verbose) { console.log("spawnCameraScreen"); }
-			// 	spawnCameraScreen();
-			// 	break;
+			case "spawnHomeScreen":
+				if (verbose) { console.log("spawnHomeScreen"); }
+				spawnHomeScreen();
+				break;
+			case "spawnMusicScreen":
+				if (verbose) { console.log("spawnMusicScreen"); }
+				spawnMusicScreen();
+				break;
+			case "spawnCameraScreen":
+				if (verbose) { console.log("spawnCameraScreen"); }
+				spawnCameraScreen();
+				break;
 			case "drawTelemetry":
 				if (verbose) { console.log("drawTelemetry"); }
 				drawTelemetry(value[0]);
@@ -134,4 +134,4 @@ sendmsg = function(key, value) {
 };
 
 
-$(document).ready(main);
+// $(document).ready(main);
